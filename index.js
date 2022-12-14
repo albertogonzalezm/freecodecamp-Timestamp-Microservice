@@ -27,10 +27,17 @@ app.get("/api/hello", function (req, res) {
 app.get("/api/:date?", (req, res) => {
   const time = parseInt(req.params.date)
   if (req.params.date != time) {
-    res.json({ unix: new Date(req.params.date).getTime() / 1000, utc: new Date(req.params.date).toUTCString() })
-  } else {
+    if (new Date(req.params.date).toUTCString() === "Invalid Date") {
+      res.json({ error: "Invalid Date" })
+    } else {
+      const ml = Date.parse(req.params.date)
+      res.json({ unix: ml, utc: new Date(req.params.date).toUTCString() })
+    }
+  }
+  if (req.params.date == time) {
     res.json({ unix: req.params.date, utc: new Date(time).toUTCString() })
   }
+
 });
 
 // listen for requests :)
