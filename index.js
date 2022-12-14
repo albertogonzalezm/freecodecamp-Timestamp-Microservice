@@ -24,9 +24,13 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get("/api/:timestamp", (req, res) => {
-    let time = new Date("2015-12-25").toUTCString();
-    res.json({ unix: 1451001600000, utc: time });
+app.get("/api/:date?", (req, res) => {
+  const time = parseInt(req.params.date)
+  if (req.params.date != time) {
+    res.json({ unix: new Date(req.params.date).getTime() / 1000, utc: new Date(req.params.date).toUTCString() })
+  } else {
+    res.json({ unix: req.params.date, utc: new Date(time).toUTCString() })
+  }
 });
 
 // listen for requests :)
